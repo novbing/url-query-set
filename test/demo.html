@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Test</title>
+  </head>
+  <body>
+    <h3 id="result"></h3>
+    <input type="button" value="ClickMe" onclick="handleClick()" />
+    <script src="./querySet.js"></script>
+    <script>
+      function handleClick() {
+        var temp = querySet(location.href, {
+          a: parseInt(Math.random() * 1000),
+          b: parseInt(Math.random() * 1000),
+        });
+        temp = querySet('/automan/render/mark-page-list', {
+          pageDefined: '首页-用户端',
+          a: '',
+        });
+        result.innerText = temp;
+      }
+    </script>
+  </body>
+</html>
