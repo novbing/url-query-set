@@ -1,6 +1,6 @@
 {
   "name": "url-query-set",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Set query or search params to a url link.",
   "main": "dist/index.js",
   "scripts": {

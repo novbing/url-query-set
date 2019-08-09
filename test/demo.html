@@ -7,20 +7,30 @@
     <title>Test</title>
   </head>
   <body>
-    <h3 id="result"></h3>
-    <input type="button" value="ClickMe" onclick="handleClick()" />
-    <script src="./querySet.js"></script>
+    <h3 id="result1"></h3>
+    <input type="button" value="Click1" onclick="handleClick1()" />
+
+    <hr />
+
+    <h3 id="result2"></h3>
+    <input type="button" value="Click2" onclick="handleClick2()" />
+
+    <script src="../src/index.js"></script>
     <script>
-      function handleClick() {
+      function handleClick1() {
         var temp = querySet(location.href, {
           a: parseInt(Math.random() * 1000),
           b: parseInt(Math.random() * 1000),
         });
-        temp = querySet('/automan/render/mark-page-list', {
+
+        result1.innerText = temp;
+      }
+      function handleClick2() {
+        var temp = querySet('/automan/render/mark-page-list', {
           pageDefined: '首页-用户端',
           a: '',
         });
-        result.innerText = temp;
+        result2.innerText = temp;
       }
     </script>
   </body>

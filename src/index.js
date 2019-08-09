@@ -4,8 +4,19 @@
 
 'use strict'
 
+function getGlobalRoot () {
+  var G = {}
+  if (typeof window !== 'undefined') {
+    G = window
+  } else if (typeof global !== 'undefined') {
+    G = global
+  }
+  return G
+}
+
 function querySet (link, queryMap) {
-  var G = window || global || {}
+  var G = getGlobalRoot()
+
   var tempLink
   var hasProtol = /^\w+:\/\//.test(link)
 
@@ -93,4 +104,14 @@ function querySet (link, queryMap) {
   }
 }
 
-export default querySet
+(function () {
+  var G = getGlobalRoot()
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = querySet
+    }
+    exports.querySet = querySet
+  } else {
+    G.querySet = querySet
+  }
+})()
