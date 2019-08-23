@@ -6,17 +6,18 @@
 
 function getGlobalRoot () {
   var G = {}
+
   if (typeof window !== 'undefined') {
     G = window
   } else if (typeof global !== 'undefined') {
     G = global
   }
+
   return G
 }
 
 function querySet (link, queryMap) {
   var G = getGlobalRoot()
-
   var tempLink
   var hasProtol = /^\w+:\/\//.test(link)
 
@@ -67,7 +68,6 @@ function querySet (link, queryMap) {
     var temp = splitSearchString(searchString)
     temp = setSearchQuery(temp, queryMap)
     temp = joinSearchParams(temp)
-
     return temp !== '' ? '?' + temp : temp
   }
 
@@ -99,18 +99,15 @@ function querySet (link, queryMap) {
   } else {
     tempLink = link.split(/^([^?#]*)(\?[^?#]*)?(#[^?#]*)?(.*)$/gi)
     tempLink[2] = splitAndJoinParams(tempLink[2], queryMap)
-
     return tempLink.join('')
   }
 }
 
 (function () {
   var G = getGlobalRoot()
-  if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-      exports = module.exports = querySet
-    }
-    exports.querySet = querySet
+
+  if (typeof module !== 'undefined') {
+    module.exports = querySet
   } else {
     G.querySet = querySet
   }

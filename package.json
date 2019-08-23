@@ -1,6 +1,6 @@
 {
   "name": "url-query-set",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Set query or search params to a url link.",
   "main": "dist/index.js",
   "scripts": {
@@ -12,10 +12,11 @@
     "url": "git+https://github.com/novbing/url-query-set.git"
   },
   "keywords": [
+    "url",
     "query",
+    "set",
     "search",
     "searchParams",
-    "url",
     "link"
   ],
   "author": "novbing@foxmail.com",
@@ -34,5 +35,7 @@
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0"
-  }
+  },
+  "module": "dist/index.js",
+  "unpkg": "dist/index.js"
 }
