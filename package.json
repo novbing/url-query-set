@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && npx babel ./src --out-dir ./dist",
+    "docs:build": "rm -rf ./docs && npx reveal-md ./README.md --separator \"^<\\!\\-\\- S \\-\\->\" --static docs --theme league",
     "lint": "eslint ./src"
   },
   "repository": {
