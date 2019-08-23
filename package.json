@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && npx babel ./src --out-dir ./dist",
-    "docs:build": "rm -rf ./docs && npx reveal-md ./README.md --separator \"^<\\!\\-\\- S \\-\\->\" --static docs --theme league --title \"URL-QUERY-SET\"",
+    "docs:build": "rm -rf ./docs && npx reveal-md ./README.md --vertical-separator \"^<\\!\\-\\- S \\-\\->\" --static docs --theme league --title \"URL-QUERY-SET\"",
     "lint": "eslint ./src"
   },
   "repository": {
