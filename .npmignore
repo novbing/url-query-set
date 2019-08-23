@@ -2,12 +2,5 @@ build
 test
 node_modules
 
-.DS_Store
-.git
-.babelrc
-.editorconfig
-.eslintrc
-.gitignore
-.prettierignore
-.prettierrc.js
+.*
 package-lock.json
