@@ -2,108 +2,107 @@
  * Author novbing@foxmail.com
  */
 
-'use strict'
+(function () {
+  'use strict'
+  function getGlobalRoot () {
+    var G = {}
 
-function getGlobalRoot () {
-  var G = {}
-
-  if (typeof window !== 'undefined') {
-    G = window
-  } else if (typeof global !== 'undefined') {
-    G = global
-  }
-
-  return G
-}
-
-function querySet (link, queryMap) {
-  var G = getGlobalRoot()
-  var tempLink
-  var hasProtol = /^\w+:\/\//.test(link)
-
-  function splitSearchString (searchString) {
-    var searchParams = {}
-
-    if (typeof searchString === 'string' && searchString !== '') {
-      searchString
-        .replace(/^\?/, '')
-        .split('&')
-        .forEach(function (v) {
-          var sp = v.split('=')
-          if (sp[0]) {
-            searchParams[sp[0]] = sp[1] || ''
-          }
-        })
+    if (typeof window !== 'undefined') {
+      G = window
+    } else if (typeof global !== 'undefined') {
+      G = global
     }
 
-    return searchParams
+    return G
   }
 
-  function setSearchQuery (searchParams, queryMap) {
-    var params = searchParams || {}
+  function querySet (link, queryMap) {
+    var G = getGlobalRoot()
+    var tempLink
+    var hasProtol = /^\w+:\/\//.test(link)
 
-    for (var key in queryMap) {
-      params[key] = queryMap[key]
-    }
+    function splitSearchString (searchString) {
+      var searchParams = {}
 
-    return params
-  }
-
-  function joinSearchParams (searchParams) {
-    var params = searchParams || {}
-    var entries = []
-
-    for (var key in params) {
-      entries.push([key, params[key]])
-    }
-
-    return entries
-      .map(function (v, i, a) {
-        return v[0] + '=' + encodeURIComponent(v[1])
-      })
-      .join('&')
-  }
-
-  function splitAndJoinParams (searchString, queryMap) {
-    var temp = splitSearchString(searchString)
-    temp = setSearchQuery(temp, queryMap)
-    temp = joinSearchParams(temp)
-    return temp !== '' ? '?' + temp : temp
-  }
-
-  if (typeof G.URL === 'function' && hasProtol) {
-    tempLink = new G.URL(link)
-
-    if (tempLink.searchParams) {
-      for (var key in queryMap) {
-        tempLink.searchParams.set(key, queryMap[key])
+      if (typeof searchString === 'string' && searchString !== '') {
+        searchString
+          .replace(/^\?/, '')
+          .split('&')
+          .forEach(function (v) {
+            var sp = v.split('=')
+            if (sp[0]) {
+              searchParams[sp[0]] = sp[1] || ''
+            }
+          })
       }
 
-      return tempLink.href
+      return searchParams
     }
-  }
 
-  if (typeof G.document === 'object' && hasProtol) {
-    tempLink = document.createElement('a')
-    tempLink.href = link
-    tempLink.search = splitAndJoinParams(tempLink.search, queryMap)
+    function setSearchQuery (searchParams, queryMap) {
+      var params = searchParams || {}
 
-    if (
-      tempLink.href.indexOf('?') !== -1 &&
+      for (var key in queryMap) {
+        params[key] = queryMap[key]
+      }
+
+      return params
+    }
+
+    function joinSearchParams (searchParams) {
+      var params = searchParams || {}
+      var entries = []
+
+      for (var key in params) {
+        entries.push([key, params[key]])
+      }
+
+      return entries
+        .map(function (v, i, a) {
+          return v[0] + '=' + encodeURIComponent(v[1])
+        })
+        .join('&')
+    }
+
+    function splitAndJoinParams (searchString, queryMap) {
+      var temp = splitSearchString(searchString)
+      temp = setSearchQuery(temp, queryMap)
+      temp = joinSearchParams(temp)
+      return temp !== '' ? '?' + temp : temp
+    }
+
+    if (typeof G.URL === 'function' && hasProtol) {
+      tempLink = new G.URL(link)
+
+      if (tempLink.searchParams) {
+        for (var key in queryMap) {
+          tempLink.searchParams.set(key, queryMap[key])
+        }
+
+        return tempLink.href
+      }
+    }
+
+    if (typeof G.document === 'object' && hasProtol) {
+      tempLink = document.createElement('a')
+      tempLink.href = link
+      tempLink.search = splitAndJoinParams(tempLink.search, queryMap)
+
+      if (
+        tempLink.href.indexOf('?') !== -1 &&
       (tempLink.search === '' || tempLink.search === '?')
-    ) {
-      return tempLink.href.replace('?', '')
+      ) {
+        return tempLink.href.replace('?', '')
+      } else {
+        return tempLink.href
+      }
     } else {
-      return tempLink.href
+      tempLink = link.split(/^([^?#]*)(\?[^?#]*)?(#[^?#]*)?(.*)$/gi)
+      tempLink[2] = splitAndJoinParams(tempLink[2], queryMap)
+      return tempLink.join('')
     }
-  } else {
-    tempLink = link.split(/^([^?#]*)(\?[^?#]*)?(#[^?#]*)?(.*)$/gi)
-    tempLink[2] = splitAndJoinParams(tempLink[2], queryMap)
-    return tempLink.join('')
   }
-}
 
-(function () {
   var G = getGlobalRoot()
 
   if (typeof module !== 'undefined') {
