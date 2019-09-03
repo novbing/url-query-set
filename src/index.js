@@ -90,7 +90,7 @@
 
       if (
         tempLink.href.indexOf('?') !== -1 &&
-      (tempLink.search === '' || tempLink.search === '?')
+        (tempLink.search === '' || tempLink.search === '?')
       ) {
         return tempLink.href.replace('?', '')
       } else {
