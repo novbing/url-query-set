@@ -60,7 +60,15 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       return entries.map(function (v, i, a) {
-        return v[0] + '=' + encodeURIComponent(v[1]);
+        var str = '';
+
+        if (v[1] instanceof Array || v[1] instanceof Object) {
+          str = decodeURIComponent(JSON.stringify(v[1]));
+        } else {
+          str = decodeURIComponent(v[1]);
+        }
+
+        return v[0] + '=' + encodeURIComponent(str);
       }).join('&');
     }
 

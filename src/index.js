@@ -3,111 +3,117 @@
  */
 
 (function () {
-  'use strict'
-  function getGlobalRoot () {
-    var G = {}
+  'use strict';
+  function getGlobalRoot() {
+    var G = {};
 
     if (typeof window !== 'undefined') {
-      G = window
+      G = window;
     } else if (typeof global !== 'undefined') {
-      G = global
+      G = global;
     }
 
-    return G
+    return G;
   }
 
-  function querySet (link, queryMap) {
-    var G = getGlobalRoot()
-    var tempLink
-    var hasProtol = /^\w+:\/\//.test(link)
+  function querySet(link, queryMap) {
+    var G = getGlobalRoot();
+    var tempLink;
+    var hasProtol = /^\w+:\/\//.test(link);
 
-    function splitSearchString (searchString) {
-      var searchParams = {}
+    function splitSearchString(searchString) {
+      var searchParams = {};
 
       if (typeof searchString === 'string' && searchString !== '') {
         searchString
           .replace(/^\?/, '')
           .split('&')
           .forEach(function (v) {
-            var sp = v.split('=')
+            var sp = v.split('=');
             if (sp[0]) {
-              searchParams[sp[0]] = sp[1] || ''
+              searchParams[sp[0]] = sp[1] || '';
             }
-          })
+          });
       }
 
-      return searchParams
+      return searchParams;
     }
 
-    function setSearchQuery (searchParams, queryMap) {
-      var params = searchParams || {}
+    function setSearchQuery(searchParams, queryMap) {
+      var params = searchParams || {};
 
       for (var key in queryMap) {
-        params[key] = queryMap[key]
+        params[key] = queryMap[key];
       }
 
-      return params
+      return params;
     }
 
-    function joinSearchParams (searchParams) {
-      var params = searchParams || {}
-      var entries = []
+    function joinSearchParams(searchParams) {
+      var params = searchParams || {};
+      var entries = [];
 
       for (var key in params) {
-        entries.push([key, params[key]])
+        entries.push([key, params[key]]);
       }
 
       return entries
         .map(function (v, i, a) {
-          return v[0] + '=' + encodeURIComponent(v[1])
+          let str = '';
+          if (v[1] instanceof Array || v[1] instanceof Object) {
+            str = decodeURIComponent(JSON.stringify(v[1]));
+          } else {
+            str = decodeURIComponent(v[1]);
+          }
+          return v[0] + '=' + encodeURIComponent(str);
         })
-        .join('&')
+        .join('&');
     }
 
-    function splitAndJoinParams (searchString, queryMap) {
-      var temp = splitSearchString(searchString)
-      temp = setSearchQuery(temp, queryMap)
-      temp = joinSearchParams(temp)
-      return temp !== '' ? '?' + temp : temp
+    function splitAndJoinParams(searchString, queryMap) {
+      var temp = splitSearchString(searchString);
+      temp = setSearchQuery(temp, queryMap);
+      temp = joinSearchParams(temp);
+      return temp !== '' ? '?' + temp : temp;
     }
 
     if (typeof G.URL === 'function' && hasProtol) {
-      tempLink = new G.URL(link)
+      tempLink = new G.URL(link);
 
       if (tempLink.searchParams) {
         for (var key in queryMap) {
-          tempLink.searchParams.set(key, queryMap[key])
+          tempLink.searchParams.set(key, queryMap[key]);
         }
 
-        return tempLink.href
+        return tempLink.href;
       }
     }
 
     if (typeof G.document === 'object' && hasProtol) {
-      tempLink = document.createElement('a')
-      tempLink.href = link
-      tempLink.search = splitAndJoinParams(tempLink.search, queryMap)
+      tempLink = document.createElement('a');
+      tempLink.href = link;
+      tempLink.search = splitAndJoinParams(tempLink.search, queryMap);
 
       if (
         tempLink.href.indexOf('?') !== -1 &&
         (tempLink.search === '' || tempLink.search === '?')
       ) {
-        return tempLink.href.replace('?', '')
+        return tempLink.href.replace('?', '');
       } else {
-        return tempLink.href
+        return tempLink.href;
       }
     } else {
-      tempLink = link.split(/^([^?#]*)(\?[^?#]*)?(#[^?#]*)?(.*)$/gi)
-      tempLink[2] = splitAndJoinParams(tempLink[2], queryMap)
-      return tempLink.join('')
+      tempLink = link.split(/^([^?#]*)(\?[^?#]*)?(#[^?#]*)?(.*)$/gi);
+      tempLink[2] = splitAndJoinParams(tempLink[2], queryMap);
+      return tempLink.join('');
     }
   }
 
-  var G = getGlobalRoot()
+  var G = getGlobalRoot();
 
   if (typeof module !== 'undefined') {
-    module.exports = querySet
+    module.exports = querySet;
   } else {
-    G.querySet = querySet
+    G.querySet = querySet;
   }
-})()
+})();
